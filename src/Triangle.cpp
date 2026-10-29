@@ -4,8 +4,6 @@ Triangle::Triangle(Vector3 a, Vector3 b, Vector3 c) {
     vertex_a = a;
     vertex_b = b;
     vertex_c = c;
-
-    print();
 }
 
 void Triangle::print() {
