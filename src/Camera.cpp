@@ -1,7 +1,11 @@
-#include "Camera.h"
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <limits>
+#include "Camera.h"
+#include "NumberUtils.h"
+#include "Ray.h"
+#include "IntersectionRecord.h"
 
 using namespace std;
 
@@ -24,19 +28,36 @@ void Camera::initialize() {
     first_pixel = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 }
 
-Ray Camera::get_ray(int i, int j) {
-    Ray ray;
-    return ray;
+Vector3 Camera::sample_square() const {
+    // random point on pixel
+    return Vector3(random_double() - 0.5, random_double() - 0.5, 0);
 }
 
-Vector3 Camera::sample_square() {
-    Vector3 v;
-    return v;
+Ray Camera::get_ray(int i, int j) const {
+    // construct ray from camera origin to randomly sampled point on pixel
+    Vector3 offset = sample_square();
+    Vector3 pixel_sample = first_pixel + ((i + offset.x()) * pixel_delta_u) + ((j + offset.y()) * pixel_delta_v);
+    Vector3 ray_origin = center;
+    Vector3 ray_direction = pixel_sample - ray_origin;
+
+    return Ray(ray_origin, ray_direction);
 }
 
 Colour3_8 Camera::ray_colour(const Ray& ray, int depth, const RenderSet& render_set) {
-    Colour3_8 c;
-    return c;
+    if (depth <= 0) {
+        return Colour3_8(0, 0, 0);
+    }
+
+    IntersectionRecord record;
+
+    if (render_set.hit(ray, Interval(0.001, numeric_limits<double>::infinity()), record)) {
+        Vector3 direction = record.get_normal() + Vector3::random_unit();
+        return 0.5 * ray_colour(Ray(record.get_point(), direction), depth - 1, render_set);
+    }
+
+    Colour3_8 background_colour(0, 0, 0);
+
+    return background_colour;
 }
 
 Camera::Camera(int w, int h, int s, int md) {

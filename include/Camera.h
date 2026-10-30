@@ -22,8 +22,8 @@ class Camera {
         Vector3 pixel_delta_v;
 
         void initialize();
-        Ray get_ray(int i, int j);
-        Vector3 sample_square();
+        Vector3 sample_square() const;
+        Ray get_ray(int i, int j) const;
         Colour3_8 ray_colour(const Ray& ray, int depth, const RenderSet& render_set);
 
     public:
