@@ -1,9 +1,12 @@
 #pragma once
 
+#include <string>
 #include "Vector3.h"
 #include "Ray.h"
 #include "Colour3_8.h"
 #include "RenderSet.h"
+
+using namespace std;
 
 class Camera {
     private:
@@ -17,7 +20,7 @@ class Camera {
         Vector3 pixel_delta_u;
         Vector3 pixel_delta_v;
 
-        void init();
+        void initialize();
         Ray get_ray(int i, int j);
         Vector3 sample_square();
         Colour3_8 ray_colour(const Ray& ray, int depth, const RenderSet& render_set);
@@ -25,5 +28,5 @@ class Camera {
     public:
         Camera(int w, int h, int s, int md);
         void debug();
-        void render(const RenderSet& render_set);
+        void render(const RenderSet& render_set, const string& filename = "renders/render.ppm");
 };

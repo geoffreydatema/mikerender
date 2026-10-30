@@ -3,7 +3,7 @@
 #include "RenderSet.h"
 #include "Triangle.h"
 
-#define WIDTH 128
+#define WIDTH 256
 #define HEIGHT 128
 #define SAMPLES 1
 #define MAX_DEPTH 50
@@ -12,10 +12,11 @@ using namespace std;
 
 int main() {
     Camera camera(WIDTH, HEIGHT, SAMPLES, MAX_DEPTH);
-    camera.debug();
 
     RenderSet render_set;
     render_set.add(make_shared<Triangle>(Vector3(1, 1, -1), Vector3(-1, 1, -1), Vector3(-1, -1, -1)));
+
+    camera.render(render_set);
 
     return 0;
 }
