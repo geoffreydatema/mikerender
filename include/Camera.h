@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 #include "Vector3.h"
 #include "Ray.h"
@@ -28,5 +29,6 @@ class Camera {
     public:
         Camera(int w, int h, int s, int md);
         void debug();
+        void write_colour(ostream& file, const Colour3_8& pixel_colour);
         void render(const RenderSet& render_set, const string& filename = "renders/render.ppm");
 };

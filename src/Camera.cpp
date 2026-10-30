@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 using namespace std;
 
@@ -56,6 +57,28 @@ void Camera::debug() {
     cout << "--------------------------------\n\n";
 }
 
+double linear_to_gamma(double linear_component) {
+    if (linear_component > 0) {
+        return sqrt(linear_component);
+    }
+
+    return 0;
+}
+
+void Camera::write_colour(ostream& file, const Colour3_8& pixel_colour) {
+    double r = linear_to_gamma(pixel_colour.r());
+    double g = linear_to_gamma(pixel_colour.g());
+    double b = linear_to_gamma(pixel_colour.b());
+
+    Interval intensity(0, 0.999);
+
+    int rbyte = int(256 * intensity.clamp(r));
+    int gbyte = int(256 * intensity.clamp(g));
+    int bbyte = int(256 * intensity.clamp(b));
+
+    file << rbyte << " " << gbyte << " " << bbyte << "\n";
+}
+
 void Camera::render(const RenderSet& render_set, const string& filename) {
     initialize();
 
@@ -65,7 +88,19 @@ void Camera::render(const RenderSet& render_set, const string& filename) {
         return;
     }
 
-    file << "hi mike";
+    file << "P3\n" << image_width << " " << image_height << "\n255\n";
+
+    for (int j = 0; j < image_height; j++) {
+        clog << "\rScanning line " << (image_height - j) << " " << flush;
+        for (int i = 0; i < image_width; i++) {
+            Colour3_8 pixel_colour(0, 0, 0);
+            for (int sample = 0; sample < samples; sample++) {
+                Ray ray = get_ray(i, j);
+                pixel_colour += ray_colour(ray, max_depth, render_set);
+            }
+            write_colour(file, pixel_samples_scale * pixel_colour);
+        }
+    }
 
     file.close();
     clog << "Render complete: " << filename << "\n";
