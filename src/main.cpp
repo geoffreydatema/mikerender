@@ -3,8 +3,8 @@
 #include "RenderSet.h"
 #include "Triangle.h"
 
-#define WIDTH 256
-#define HEIGHT 128
+#define WIDTH 20
+#define HEIGHT 10
 #define SAMPLES 1
 #define MAX_DEPTH 50
 

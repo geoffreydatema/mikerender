@@ -109,7 +109,9 @@ void Camera::render(const RenderSet& render_set, const string& filename) {
         return;
     }
 
-    file << "P3\n" << image_width << " " << image_height << "\n255\n";
+    file << "::{\n";
+    file << "!!uaf {version 0.1};\n";
+    file << "!!uafimage {width " << image_width << " height " << image_height << "}\n";
 
     for (int j = 0; j < image_height; j++) {
         clog << "\rScanning line " << (image_height - j) << " " << flush;
@@ -123,6 +125,8 @@ void Camera::render(const RenderSet& render_set, const string& filename) {
         }
     }
 
+    file << ";\n";
+    file << "}";
     file.close();
     clog << "Render complete: " << filename << "\n";
 }
