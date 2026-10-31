@@ -11,7 +11,10 @@ class IntersectionRecord {
         bool front_face;
 
     public:
-        void set_face_normal(const Ray& ray, const Vector3& outward_normal);
         Vector3 get_point() const;
         Vector3 get_normal() const;
+        void set_point(const Vector3& intersection);
+        void set_normal(const Ray& ray, const Vector3& outward_normal);
+        double get_t() const;
+        void set_t(double new_t);
 };

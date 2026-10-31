@@ -1,5 +1,5 @@
+#include <iostream>
 #include <limits>
-
 #include "Interval.h"
 
 using namespace std;
@@ -37,4 +37,12 @@ double Interval::clamp(double value) const {
     }
 
     return value;
+}
+
+double Interval::get_min() const {
+    return min;
+}
+
+double Interval::get_max() const {
+    return max;
 }

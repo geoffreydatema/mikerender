@@ -12,4 +12,6 @@ class Interval {
         bool contains(double value) const;
         bool surrounds(double value) const;
         double clamp(double value) const;
+        double get_min() const;
+        double get_max() const;
 };

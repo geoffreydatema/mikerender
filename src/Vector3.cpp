@@ -83,3 +83,9 @@ Vector3 operator/(const Vector3& left_operand, double right_operand) {
 double dot(const Vector3& left_operand, const Vector3& right_operand) {
     return left_operand.x() * right_operand.x() + left_operand.y() * right_operand.y() + left_operand.z() * right_operand.z();
 }
+
+Vector3 cross(const Vector3& left_operand, const Vector3& right_operand) {
+    return Vector3( left_operand.y() * right_operand.z() - left_operand.z() * right_operand.y(),
+                    left_operand.z() * right_operand.x() - left_operand.x() * right_operand.z(),
+                    left_operand.x() * right_operand.y() - left_operand.y() * right_operand.x());
+}

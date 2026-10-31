@@ -24,3 +24,4 @@ Vector3 operator*(double left_operand, const Vector3& right_operand);
 Vector3 operator*(const Vector3& left_operand, double right_operand);
 Vector3 operator/(const Vector3& left_operand, double right_operand);
 double dot(const Vector3& left_operand, const Vector3& right_operand);
+Vector3 cross(const Vector3& left_operand, const Vector3& right_operand);

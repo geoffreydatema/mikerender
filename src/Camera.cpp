@@ -55,8 +55,8 @@ Colour3_8 Camera::ray_colour(const Ray& ray, int depth, const RenderSet& render_
         return 0.5 * ray_colour(Ray(record.get_point(), direction), depth - 1, render_set);
     }
 
-    Colour3_8 background_colour(0, 0, 0);
-
+    // For now, we need a non-black ambient universe colour because there are no other lights in the scene
+    Colour3_8 background_colour(0.5, 0.5, 0.5);
     return background_colour;
 }
 
@@ -114,7 +114,7 @@ void Camera::render(const RenderSet& render_set, const string& filename) {
     file << "!!uafimage {width " << image_width << " height " << image_height << "}\n";
 
     for (int j = 0; j < image_height; j++) {
-        clog << "\rScanning line " << (image_height - j) << " " << flush;
+        cout << "\rScanning line " << (image_height - j) << "\n";
         for (int i = 0; i < image_width; i++) {
             Colour3_8 pixel_colour(0, 0, 0);
             for (int sample = 0; sample < samples; sample++) {
@@ -128,5 +128,5 @@ void Camera::render(const RenderSet& render_set, const string& filename) {
     file << ";\n";
     file << "}";
     file.close();
-    clog << "Render complete: " << filename << "\n";
+    cout << "Render complete: " << filename << "\n";
 }
