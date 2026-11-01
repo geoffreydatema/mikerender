@@ -16,7 +16,7 @@ void Triangle::print() {
     vertex_c.print();
 }
 
-bool Triangle::hit(const Ray& ray, Interval ray_t, IntersectionRecord& record) const {
+bool Triangle::get_intersection(const Ray& ray, Interval ray_t, IntersectionRecord& record) const {
 
     // Edges
     Vector3 ab = vertex_b - vertex_a;

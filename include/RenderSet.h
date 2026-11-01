@@ -15,5 +15,5 @@ class RenderSet {
 
     public:
         void add(shared_ptr<RenderObject> object);
-        bool hit(const Ray& r, Interval ray_t, IntersectionRecord& rec) const;
+        bool get_intersection(const Ray& r, Interval ray_t, IntersectionRecord& rec) const;
 };

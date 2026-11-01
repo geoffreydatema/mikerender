@@ -29,12 +29,10 @@ void Camera::initialize() {
 }
 
 Vector3 Camera::sample_square() const {
-    // random point on pixel
     return Vector3(random_double() - 0.5, random_double() - 0.5, 0);
 }
 
 Ray Camera::get_ray(int i, int j) const {
-    // construct ray from camera origin to randomly sampled point on pixel
     Vector3 offset = sample_square();
     Vector3 pixel_sample = first_pixel + ((i + offset.x()) * pixel_delta_u) + ((j + offset.y()) * pixel_delta_v);
     Vector3 ray_origin = center;
@@ -43,16 +41,16 @@ Ray Camera::get_ray(int i, int j) const {
     return Ray(ray_origin, ray_direction);
 }
 
-Colour3_32 Camera::ray_colour(const Ray& ray, int depth, const RenderSet& render_set) {
+Colour3_32 Camera::trace_ray(const Ray& ray, int depth, const RenderSet& render_set) {
     if (depth <= 0) {
         return Colour3_32(0, 0, 0);
     }
 
     IntersectionRecord record;
 
-    if (render_set.hit(ray, Interval(0.001, numeric_limits<double>::infinity()), record)) {
+    if (render_set.get_intersection(ray, Interval(0.001, numeric_limits<double>::infinity()), record)) {
         Vector3 direction = record.get_normal() + Vector3::random_unit();
-        return 0.5 * ray_colour(Ray(record.get_point(), direction), depth - 1, render_set);
+        return 0.5 * trace_ray(Ray(record.get_point(), direction), depth - 1, render_set);
     }
 
     // For now, we need a non-black ambient universe colour because there are no other lights in the scene
@@ -103,7 +101,7 @@ void Camera::render(const RenderSet& render_set, const string& filename) {
             Colour3_32 pixel_colour(0, 0, 0);
             for (int sample = 0; sample < samples; sample++) {
                 Ray ray = get_ray(i, j);
-                pixel_colour += ray_colour(ray, max_depth, render_set);
+                pixel_colour += trace_ray(ray, max_depth, render_set);
             }
             write_colour(file, pixel_samples_scale * pixel_colour);
         }

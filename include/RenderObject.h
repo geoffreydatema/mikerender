@@ -7,5 +7,5 @@
 class RenderObject {
     public:
         virtual ~RenderObject() = default;
-        virtual bool hit(const Ray& r, Interval ray_t, IntersectionRecord& rec) const = 0;
+        virtual bool get_intersection(const Ray& r, Interval ray_t, IntersectionRecord& rec) const = 0;
 };

@@ -15,5 +15,5 @@ class Triangle : public RenderObject {
     public:
         Triangle(Vector3 a, Vector3 b, Vector3 c);
         void print();
-        bool hit(const Ray& r, Interval ray_t, IntersectionRecord& rec) const override;
+        bool get_intersection(const Ray& r, Interval ray_t, IntersectionRecord& rec) const override;
 };
