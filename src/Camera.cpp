@@ -78,24 +78,14 @@ void Camera::debug() {
     cout << "--------------------------------\n\n";
 }
 
-double linear_to_gamma(double linear_component) {
-    if (linear_component > 0) {
-        return sqrt(linear_component);
-    }
-
-    return 0;
-}
-
 void Camera::write_colour(ostream& file, const Colour3_8& pixel_colour) {
-    double r = linear_to_gamma(pixel_colour.r());
-    double g = linear_to_gamma(pixel_colour.g());
-    double b = linear_to_gamma(pixel_colour.b());
+    Colour3_8 gamma_corrected_colour = pixel_colour.gamma_correct();
 
     Interval intensity(0, 0.999);
 
-    int rbyte = int(256 * intensity.clamp(r));
-    int gbyte = int(256 * intensity.clamp(g));
-    int bbyte = int(256 * intensity.clamp(b));
+    int rbyte = int(256 * intensity.clamp(gamma_corrected_colour.r()));
+    int gbyte = int(256 * intensity.clamp(gamma_corrected_colour.g()));
+    int bbyte = int(256 * intensity.clamp(gamma_corrected_colour.b()));
 
     file << rbyte << " " << gbyte << " " << bbyte << "\n";
 }

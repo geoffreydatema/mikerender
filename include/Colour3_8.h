@@ -12,6 +12,7 @@ class Colour3_8 {
         double b() const;
         void print();
         Colour3_8& operator+=(const Colour3_8& right_operand);
+        Colour3_8 gamma_correct() const;
 };
 
 Colour3_8 operator*(double left_operand, const Colour3_8& right_operand);

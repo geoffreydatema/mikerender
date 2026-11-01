@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <cmath>
 #include "Colour3_8.h"
 
 using namespace std;
@@ -37,6 +37,14 @@ Colour3_8& Colour3_8::operator+=(const Colour3_8& right_operand) {
     components[1] += right_operand.g();
     components[2] += right_operand.b();
     return *this;
+}
+
+Colour3_8 Colour3_8::gamma_correct() const {
+    double r = components[0] > 0.0 ? sqrt(components[0]) : 0.0;
+    double g = components[1] > 0.0 ? sqrt(components[1]) : 0.0;
+    double b = components[2] > 0.0 ? sqrt(components[2]) : 0.0;
+
+    return Colour3_8(r, g, b);
 }
 
 Colour3_8 operator*(double left_operand, const Colour3_8& right_operand) {
