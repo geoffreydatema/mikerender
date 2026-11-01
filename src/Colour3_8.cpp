@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include "Colour3_8.h"
+#include "Interval.h"
 
 using namespace std;
 
@@ -10,25 +11,35 @@ Colour3_8::Colour3_8() {
     components[2] = 0;
 }
 
-Colour3_8::Colour3_8(double x, double y, double z) {
-    components[0] = x;
-    components[1] = y;
-    components[2] = z;
+Colour3_8::Colour3_8(uint8_t r, uint8_t g, uint8_t b) {
+    components[0] = r;
+    components[1] = g;
+    components[2] = b;
 }
 
-double Colour3_8::r() const {
+Colour3_8 Colour3_8::from_colour3_32(float r, float g, float b) {
+    static const Interval intensity(0, 0.999);
+    
+    return Colour3_8(
+        static_cast<uint8_t>(256.0f * intensity.clamp(r)),
+        static_cast<uint8_t>(256.0f * intensity.clamp(g)),
+        static_cast<uint8_t>(256.0f * intensity.clamp(b))
+    );
+}
+
+uint8_t Colour3_8::r() const {
     return components[0];
 }
 
-double Colour3_8::g() const {
+uint8_t Colour3_8::g() const {
     return components[1];
 }
 
-double Colour3_8::b() const {
+uint8_t Colour3_8::b() const {
     return components[2];
 }
 
-void Colour3_8::print() {
+void Colour3_8::print() const {
     cout << components[0] << "\t" << components[1] << "\t" << components[2] << "\n";
 }
 
@@ -39,14 +50,11 @@ Colour3_8& Colour3_8::operator+=(const Colour3_8& right_operand) {
     return *this;
 }
 
-Colour3_8 Colour3_8::gamma_correct() const {
-    double r = components[0] > 0.0 ? sqrt(components[0]) : 0.0;
-    double g = components[1] > 0.0 ? sqrt(components[1]) : 0.0;
-    double b = components[2] > 0.0 ? sqrt(components[2]) : 0.0;
-
-    return Colour3_8(r, g, b);
+Colour3_8 operator*(uint8_t left_operand, const Colour3_8& right_operand) {
+    return Colour3_8(left_operand * right_operand.r(), left_operand * right_operand.g(), left_operand * right_operand.b());
 }
 
-Colour3_8 operator*(double left_operand, const Colour3_8& right_operand) {
-    return Colour3_8(left_operand * right_operand.r(), left_operand * right_operand.g(), left_operand * right_operand.b());
+ostream& operator<<(ostream& stream, const Colour3_8& colour) {
+    stream << static_cast<int>(colour.r()) << ' ' << static_cast<int>(colour.g()) << ' ' << static_cast<int>(colour.b());
+    return stream;
 }

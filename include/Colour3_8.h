@@ -1,18 +1,24 @@
 #pragma once
 
+#include <iostream>
+#include <cstdint>
+
+using namespace std;
+
 class Colour3_8 {
     private:
-        double components[3];
+        uint8_t components[3];
 
     public:
         Colour3_8();
-        Colour3_8(double x, double y, double z);
-        double r() const;
-        double g() const;
-        double b() const;
-        void print();
+        Colour3_8(uint8_t r, uint8_t g, uint8_t b);
+        static Colour3_8 from_colour3_32(float r, float g, float b);
+        uint8_t r() const;
+        uint8_t g() const;
+        uint8_t b() const;
+        void print() const ;
         Colour3_8& operator+=(const Colour3_8& right_operand);
-        Colour3_8 gamma_correct() const;
+        friend ostream& operator<<(ostream& stream, const Colour3_8& colour);
 };
 
-Colour3_8 operator*(double left_operand, const Colour3_8& right_operand);
+Colour3_8 operator*(uint8_t left_operand, const Colour3_8& right_operand);

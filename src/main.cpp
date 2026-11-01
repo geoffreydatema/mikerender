@@ -5,7 +5,7 @@
 
 #define WIDTH 400
 #define HEIGHT 200
-#define SAMPLES 1
+#define SAMPLES 40
 #define MAX_DEPTH 50
 
 using namespace std;

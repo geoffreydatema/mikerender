@@ -43,9 +43,9 @@ Ray Camera::get_ray(int i, int j) const {
     return Ray(ray_origin, ray_direction);
 }
 
-Colour3_8 Camera::ray_colour(const Ray& ray, int depth, const RenderSet& render_set) {
+Colour3_32 Camera::ray_colour(const Ray& ray, int depth, const RenderSet& render_set) {
     if (depth <= 0) {
-        return Colour3_8(0, 0, 0);
+        return Colour3_32(0, 0, 0);
     }
 
     IntersectionRecord record;
@@ -56,7 +56,7 @@ Colour3_8 Camera::ray_colour(const Ray& ray, int depth, const RenderSet& render_
     }
 
     // For now, we need a non-black ambient universe colour because there are no other lights in the scene
-    Colour3_8 background_colour(0.5, 0.5, 0.5);
+    Colour3_32 background_colour(0.5, 0.5, 0.5);
     return background_colour;
 }
 
@@ -78,16 +78,10 @@ void Camera::debug() {
     cout << "--------------------------------\n\n";
 }
 
-void Camera::write_colour(ostream& file, const Colour3_8& pixel_colour) {
-    Colour3_8 gamma_corrected_colour = pixel_colour.gamma_correct();
+void Camera::write_colour(ostream& file, const Colour3_32& pixel_colour) {
+    Colour3_8 gamma_corrected_bytes = pixel_colour.to_gamma_corrected_colour3_8();
 
-    Interval intensity(0, 0.999);
-
-    int rbyte = int(256 * intensity.clamp(gamma_corrected_colour.r()));
-    int gbyte = int(256 * intensity.clamp(gamma_corrected_colour.g()));
-    int bbyte = int(256 * intensity.clamp(gamma_corrected_colour.b()));
-
-    file << rbyte << " " << gbyte << " " << bbyte << "\n";
+    file << gamma_corrected_bytes << '\n';
 }
 
 void Camera::render(const RenderSet& render_set, const string& filename) {
@@ -106,7 +100,7 @@ void Camera::render(const RenderSet& render_set, const string& filename) {
     for (int j = 0; j < image_height; j++) {
         cout << "\rScanning line " << (image_height - j) << "\n";
         for (int i = 0; i < image_width; i++) {
-            Colour3_8 pixel_colour(0, 0, 0);
+            Colour3_32 pixel_colour(0, 0, 0);
             for (int sample = 0; sample < samples; sample++) {
                 Ray ray = get_ray(i, j);
                 pixel_colour += ray_colour(ray, max_depth, render_set);

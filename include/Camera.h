@@ -4,7 +4,7 @@
 #include <string>
 #include "Vector3.h"
 #include "Ray.h"
-#include "Colour3_8.h"
+#include "Colour3_32.h"
 #include "RenderSet.h"
 
 using namespace std;
@@ -24,11 +24,11 @@ class Camera {
         void initialize();
         Vector3 sample_square() const;
         Ray get_ray(int i, int j) const;
-        Colour3_8 ray_colour(const Ray& ray, int depth, const RenderSet& render_set);
+        Colour3_32 ray_colour(const Ray& ray, int depth, const RenderSet& render_set);
 
     public:
         Camera(int w, int h, int s, int md);
         void debug();
-        void write_colour(ostream& file, const Colour3_8& pixel_colour);
+        void write_colour(ostream& file, const Colour3_32& pixel_colour);
         void render(const RenderSet& render_set, const string& filename = "renders/render.uaf");
 };
