@@ -14,11 +14,8 @@ int main() {
     Camera camera(WIDTH, HEIGHT, SAMPLES, MAX_DEPTH);
 
     RenderSet render_set;
-    // i thought this was counter clockwise
-    render_set.add(make_shared<Triangle>(Vector3(1, 2, -1), Vector3(-1, 2, -1), Vector3(-1, 0, -1)));
-
-    //i thought this was clockwise
-    render_set.add(make_shared<Triangle>(Vector3(-1, -2, -1), Vector3(-1, 0, -1), Vector3(1, 0, -1)));
+    render_set.add(make_shared<Triangle>(Vector3(1, 4, 2), Vector3(-1, 4, 2), Vector3(-1, 4, 0)));
+    render_set.add(make_shared<Triangle>(Vector3(-1, 4, -2), Vector3(-1, 4, 0), Vector3(1, 4, 0)));
 
     camera.render(render_set);
 

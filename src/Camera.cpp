@@ -14,17 +14,17 @@ void Camera::initialize() {
 
     center = Vector3(0, 0, 0);
 
-    double focal_length = 0.5;
+    double focal_length = 2.0;
     double viewport_height = 2.0;
     double viewport_width = viewport_height * (double(image_width) / image_height);
 
     Vector3 viewport_u = Vector3(viewport_width, 0, 0);
-    Vector3 viewport_v = Vector3(0, -viewport_height, 0);
+    Vector3 viewport_v = Vector3(0, 0, -viewport_height);
 
     pixel_delta_u = viewport_u / image_width;
     pixel_delta_v = viewport_v / image_height;
 
-    Vector3 viewport_upper_left = center - Vector3(0, 0, focal_length) - viewport_u / 2 - viewport_v / 2;
+    Vector3 viewport_upper_left = center + Vector3(0, focal_length, 0) - viewport_u / 2 - viewport_v / 2;
     first_pixel = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 }
 
