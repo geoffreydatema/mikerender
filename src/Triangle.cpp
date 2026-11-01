@@ -24,6 +24,12 @@ bool Triangle::hit(const Ray& ray, Interval ray_t, IntersectionRecord& record) c
 
     // Normal
     Vector3 normal = cross(ab, ac);
+
+    // Reject intersection test on backfaces
+    if (dot(ray.get_direction(), normal) < 0) {
+        return false;
+    }
+
     normal = normal / normal.magnitude();
 
     // Line plane intersection

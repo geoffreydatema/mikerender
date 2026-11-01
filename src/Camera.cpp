@@ -14,7 +14,7 @@ void Camera::initialize() {
 
     center = Vector3(0, 0, 0);
 
-    double focal_length = 1.0;
+    double focal_length = 0.5;
     double viewport_height = 2.0;
     double viewport_width = viewport_height * (double(image_width) / image_height);
 
@@ -110,8 +110,8 @@ void Camera::render(const RenderSet& render_set, const string& filename) {
     }
 
     file << "::{\n";
-    file << "!!uaf {version 0.1};\n";
-    file << "!!uafimage {width " << image_width << " height " << image_height << "}\n";
+    file << "!!uafheader { version 0.1 };\n";
+    file << "!!uafimage { width " << image_width << " height " << image_height << " }\n";
 
     for (int j = 0; j < image_height; j++) {
         cout << "\rScanning line " << (image_height - j) << "\n";
