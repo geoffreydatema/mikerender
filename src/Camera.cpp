@@ -6,6 +6,7 @@
 #include "NumberUtils.h"
 #include "Ray.h"
 #include "IntersectionRecord.h"
+#include "NumberUtils.h"
 
 using namespace std;
 
@@ -14,8 +15,8 @@ void Camera::initialize() {
 
     center = Vector3(0, 0, 0);
 
-    double focal_length = 2.0;
-    double viewport_height = 2.0;
+    double focal_length = Constants::DEFAULT_FOCAL_LENGTH * Constants::MILLIMETER;
+    double viewport_height = Constants::DEFAULT_SENSOR_SIZE * Constants::MILLIMETER;
     double viewport_width = viewport_height * (double(image_width) / image_height);
 
     Vector3 viewport_u = Vector3(viewport_width, 0, 0);
@@ -24,7 +25,9 @@ void Camera::initialize() {
     pixel_delta_u = viewport_u / image_width;
     pixel_delta_v = viewport_v / image_height;
 
-    Vector3 viewport_upper_left = center + Vector3(0, focal_length, 0) - viewport_u / 2 - viewport_v / 2;
+    Vector3 viewport_center = center + Vector3(0, focal_length, 0);
+    Vector3 viewport_upper_left = viewport_center - (viewport_u / 2.0) - (viewport_v / 2.0);
+
     first_pixel = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 }
 
@@ -48,7 +51,7 @@ Colour3_32 Camera::trace_ray(const Ray& ray, int depth, const RenderSet& render_
 
     IntersectionRecord record;
 
-    if (render_set.get_intersection(ray, Interval(0.001, numeric_limits<double>::infinity()), record)) {
+    if (render_set.get_intersection(ray, Interval(Constants::EPSILON, numeric_limits<double>::infinity()), record)) {
         Vector3 direction = record.get_normal() + Vector3::random_unit();
         return 0.5 * trace_ray(Ray(record.get_point(), direction), depth - 1, render_set);
     }

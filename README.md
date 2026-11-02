@@ -8,4 +8,3 @@ g++ src/*.cpp -o build/mike.exe -Iinclude
 ../uafviewer/build/uafviewer.exe ./renders/render.uaf
 
 ## backlog
-- simplify as much as possible
