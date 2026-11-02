@@ -7,25 +7,37 @@
 #include "Ray.h"
 #include "IntersectionRecord.h"
 #include "NumberUtils.h"
+#include "Vector3.h"
 
 using namespace std;
 
 void Camera::initialize() {
+    position = Vector3(Constants::DEFAULT_CAMERA_POSITION[0], Constants::DEFAULT_CAMERA_POSITION[1], Constants::DEFAULT_CAMERA_POSITION[2]);
+    orientation_target = Vector3(0, 1, 0);
+    up = Vector3(0, 0, 1);
+    
     pixel_samples_scale = 1.0 / samples;
 
-    center = Vector3(0, 0, 0);
-
     double focal_length = Constants::DEFAULT_FOCAL_LENGTH * Constants::MILLIMETER;
-    double viewport_height = Constants::DEFAULT_SENSOR_SIZE * Constants::MILLIMETER;
-    double viewport_width = viewport_height * (double(image_width) / image_height);
+    double sensor_height = Constants::DEFAULT_SENSOR_SIZE * Constants::MILLIMETER;
 
-    Vector3 viewport_u = Vector3(viewport_width, 0, 0);
-    Vector3 viewport_v = Vector3(0, 0, -viewport_height);
+    double aspect_ratio = double(image_width) / double(image_height);
+    double sensor_width = sensor_height * aspect_ratio;
+
+    double viewport_height = sensor_height;
+    double viewport_width = sensor_width;
+
+    Vector3 w = (orientation_target - position).to_unit_vector();
+    Vector3 u = cross(w, up).to_unit_vector();
+    Vector3 v = cross(u, w);
+
+    Vector3 viewport_u = viewport_width * u;
+    Vector3 viewport_v = -viewport_height * v;
 
     pixel_delta_u = viewport_u / image_width;
     pixel_delta_v = viewport_v / image_height;
 
-    Vector3 viewport_center = center + Vector3(0, focal_length, 0);
+    Vector3 viewport_center = position + (focal_length * w);
     Vector3 viewport_upper_left = viewport_center - (viewport_u / 2.0) - (viewport_v / 2.0);
 
     first_pixel = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
@@ -38,7 +50,7 @@ Vector3 Camera::sample_square() const {
 Ray Camera::get_ray(int i, int j) const {
     Vector3 offset = sample_square();
     Vector3 pixel_sample = first_pixel + ((i + offset.x()) * pixel_delta_u) + ((j + offset.y()) * pixel_delta_v);
-    Vector3 ray_origin = center;
+    Vector3 ray_origin = position;
     Vector3 ray_direction = pixel_sample - ray_origin;
 
     return Ray(ray_origin, ray_direction);

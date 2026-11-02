@@ -45,6 +45,11 @@ double Vector3::length_squared() const {
     return components[0] * components[0] + components[1] * components[1] + components[2] * components[2]; 
 }
 
+Vector3 Vector3::to_unit_vector() const {
+    double m = magnitude();
+    return *this / m;
+}
+
 Vector3 Vector3::random(double min, double max) {
     return Vector3(random_double(min, max), random_double(min, max), random_double(min, max));
 }
@@ -77,7 +82,7 @@ Vector3 operator*(const Vector3& left_operand, double right_operand) {
 }
 
 Vector3 operator/(const Vector3& left_operand, double right_operand) {
-    return (1 / right_operand) * left_operand;
+    return (1.0 / right_operand) * left_operand;
 }
 
 double dot(const Vector3& left_operand, const Vector3& right_operand) {

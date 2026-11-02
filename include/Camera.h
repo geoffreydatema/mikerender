@@ -16,7 +16,9 @@ class Camera {
         int samples;
         int max_depth;
         double pixel_samples_scale;
-        Vector3 center;
+        Vector3 position;
+        Vector3 orientation_target;
+        Vector3 up;
         Vector3 first_pixel;
         Vector3 pixel_delta_u;
         Vector3 pixel_delta_v;

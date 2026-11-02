@@ -14,6 +14,7 @@ class Vector3 {
         Vector3 operator-() const;
         double magnitude() const;
         double length_squared() const;
+        Vector3 to_unit_vector() const;
         static Vector3 random(double min, double max);
         static Vector3 random_unit();
 };
