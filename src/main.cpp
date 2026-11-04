@@ -1,11 +1,11 @@
 #include <iostream>
 #include "Camera.h"
 #include "RenderSet.h"
-#include "Triangle.h"
+#include "Mesh.h"
 
 #define WIDTH 256
 #define HEIGHT 256
-#define SAMPLES 1
+#define SAMPLES 10
 #define MAX_DEPTH 50
 
 using namespace std;
@@ -14,24 +14,49 @@ int main() {
     Camera camera(WIDTH, HEIGHT, SAMPLES, MAX_DEPTH);
 
     RenderSet render_set;
+    
+    // Plane
+    vector<Vector3> plane_vertices = {
+        {-3, -3, -1},
+        {3, -3, -1},
+        {-3, 3, -1},
+        {3, 3, -1}
+    };
+
+    vector<uint32_t> plane_polygons = {
+        1, 2, 0,
+        1, 3, 2
+    };
 
     // Cube
-    render_set.add(make_shared<Triangle>(Vector3(1.41421, 4.42642, 0.819152), Vector3(-1.41421, 4.42642, 0.819152), Vector3(0, 3.26797, 0.007992)));
-    render_set.add(make_shared<Triangle>(Vector3(1.41421, 4.42642, 0.819152), Vector3(0, 5.58488, 1.63031), Vector3(-1.41421, 4.42642, 0.819152)));
-    render_set.add(make_shared<Triangle>(Vector3(1.41421, 4.42642, 0.819152), Vector3(0, 4.41512, -1.63031), Vector3(1.41421, 5.57358, -0.819152)));
-    render_set.add(make_shared<Triangle>(Vector3(1.41421, 4.42642, 0.819152), Vector3(0, 3.26797, 0.007992), Vector3(0, 4.41512, -1.63031)));
-    render_set.add(make_shared<Triangle>(Vector3(0, 3.26797, 0.007992), Vector3(-1.41421, 4.42642, 0.819152), Vector3(-1.41421, 5.57358, -0.819152)));
-    render_set.add(make_shared<Triangle>(Vector3(0, 3.26797, 0.007992), Vector3(-1.41421, 5.57358, -0.819152), Vector3(0, 4.41512, -1.63031)));
-    render_set.add(make_shared<Triangle>(Vector3(-1.41421, 4.42642, 0.819152), Vector3(0, 6.73203, -0.819152), Vector3(-1.41421, 5.57358, -0.819152)));
-    render_set.add(make_shared<Triangle>(Vector3(-1.41421, 4.42642, 0.819152), Vector3(0, 5.58488, 1.63031), Vector3(0, 6.73203, -0.007992)));
-    render_set.add(make_shared<Triangle>(Vector3(0, 5.58488, 1.63031), Vector3(1.41421, 5.57358, -0.819152), Vector3(0, 6.73203, -0.007992)));
-    render_set.add(make_shared<Triangle>(Vector3(0, 5.58488, 1.63031), Vector3(1.41421, 4.42642, 0.819152), Vector3(1.41421, 5.57358, -0.819152)));
-    render_set.add(make_shared<Triangle>(Vector3(0, 6.73203, -0.007992), Vector3(1.41421, 5.57358, -0.819152), Vector3(0, 4.41512, -1.63031)));
-    render_set.add(make_shared<Triangle>(Vector3(0, 6.73203, -0.007992), Vector3(0, 4.41512, -1.63031), Vector3(-1.41421, 5.57358, -0.819152)));
+    vector<Vector3> cube_vertices = {
+        {-1, -1, -1},
+        {-1, -1, 1},
+        {-1, 1, -1},
+        {-1, 1, 1},
+        {1, -1, -1},
+        {1, -1, 1},
+        {1, 1, -1},
+        {1, 1, 1}
+    };
 
-    // Plane
-    render_set.add(make_shared<Triangle>(Vector3(-2.4, 3, 2), Vector3(-2.4, 3, -2), Vector3(-1.4, 7, -2)));
-    render_set.add(make_shared<Triangle>(Vector3(-1.4, 7, 2), Vector3(-2.4, 3, 2), Vector3(-1.4, 7, -2)));
+    vector<uint32_t> cube_polygons = {
+        0, 1, 2,
+        2, 3, 6,
+        6, 7, 4,
+        5, 0, 4,
+        0, 2, 6,
+        5, 7, 3,
+        1, 3, 2,
+        3, 7, 6,
+        7, 5, 4,
+        5, 1, 0,
+        6, 4, 0,
+        1, 5, 3
+    };
+
+    render_set.add(make_shared<Mesh>(plane_vertices, plane_polygons));
+    render_set.add(make_shared<Mesh>(cube_vertices, cube_polygons));
 
     camera.render(render_set);
 

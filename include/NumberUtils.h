@@ -3,8 +3,8 @@
 #include "Vector3.h"
 
 namespace Constants {
-    constexpr double DEFAULT_CAMERA_POSITION[3] = {0, -2, 0};
-    constexpr double DEFAULT_ORIENTATION_TARGET[3] = {0, 3.26797, 0.007992};
+    constexpr double DEFAULT_CAMERA_POSITION[3] = {4, -5, 2};
+    constexpr double DEFAULT_ORIENTATION_TARGET[3] = {0, 0, 0};
     constexpr double DEFAULT_FOCAL_LENGTH = 18.0;
     constexpr double DEFAULT_SENSOR_SIZE = 24.0;
 
