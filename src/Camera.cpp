@@ -8,6 +8,7 @@
 #include "IntersectionRecord.h"
 #include "NumberUtils.h"
 #include "Vector3.h"
+#include "PointLight.h"
 
 using namespace std;
 
@@ -56,20 +57,54 @@ Ray Camera::get_ray(int i, int j) const {
     return Ray(ray_origin, ray_direction);
 }
 
-Colour3_32 Camera::trace_ray(const Ray& ray, int depth, const RenderSet& render_set) {
+Colour3_32 Camera::trace_light_ray(const Ray& ray, const LightSet& light_set) {
+    return Colour3_32(0.5, 0.5, 0.5);
+}
+
+Colour3_32 Camera::trace_ray(const Ray& ray, int depth, const RenderSet& render_set, const LightSet& light_set) {
     if (depth <= 0) {
         return Colour3_32(0, 0, 0);
     }
 
     IntersectionRecord record;
 
+    // If the ray hit geometry
     if (render_set.get_intersection(ray, Interval(Constants::EPSILON, numeric_limits<double>::infinity()), record)) {
+
+        Colour3_32 direct_light(0, 0, 0);
+
+        for (const shared_ptr<LightObject>& light_object : light_set.get_lights()) {
+            auto light = static_pointer_cast<PointLight>(light_object);
+    
+            Vector3 vector_to_light = light->get_position() - record.get_point();
+            double distance_to_light = vector_to_light.magnitude();
+            Vector3 direction_to_light = vector_to_light / distance_to_light;
+            
+            Ray shadow_ray(record.get_point(), direction_to_light);
+            IntersectionRecord shadow_record;
+            Interval shadow_interval(Constants::EPSILON, distance_to_light - Constants::EPSILON);
+
+            if (!render_set.get_intersection(shadow_ray, shadow_interval, shadow_record)) {
+                // No interesection with geometry, the point ray is not in shadow
+                double cos_theta = max(0.0, dot(record.get_normal(), direction_to_light));
+                double attenuation = 1.0 / (distance_to_light * distance_to_light);
+
+                direct_light = direct_light + (light->get_colour() * (light->get_intensity() * cos_theta * attenuation));
+            }
+        }
+
+        // Indirect lighting (recursive bounce)
         Vector3 direction = record.get_normal() + Vector3::random_unit();
-        return 0.5 * trace_ray(Ray(record.get_point(), direction), depth - 1, render_set);
+        Colour3_32 indirect_light = trace_ray(Ray(record.get_point(), direction), depth - 1, render_set, light_set);
+
+        // Hard coded albedo for now
+        float albedo = 0.5;
+
+        return albedo * (direct_light + indirect_light);
     }
 
-    // For now, we need a non-black ambient universe colour because there are no other lights in the scene
-    Colour3_32 background_colour(0.5, 0.5, 0.5);
+    // If the ray did not hit any geometry and went straight to the background
+    Colour3_32 background_colour(Constants::DEFAULT_BACKGROUND_COLOUR[0], Constants::DEFAULT_BACKGROUND_COLOUR[1], Constants::DEFAULT_BACKGROUND_COLOUR[2]);
     return background_colour;
 }
 
@@ -97,7 +132,7 @@ void Camera::write_colour(ostream& file, const Colour3_32& pixel_colour) {
     file << gamma_corrected_bytes << '\n';
 }
 
-void Camera::render(const RenderSet& render_set, const string& filename) {
+void Camera::render(const RenderSet& render_set, const LightSet& light_set, const string& filename) {
     initialize();
 
     ofstream file(filename);
@@ -116,7 +151,7 @@ void Camera::render(const RenderSet& render_set, const string& filename) {
             Colour3_32 pixel_colour(0, 0, 0);
             for (int sample = 0; sample < samples; sample++) {
                 Ray ray = get_ray(i, j);
-                pixel_colour += trace_ray(ray, max_depth, render_set);
+                pixel_colour += trace_ray(ray, max_depth, render_set, light_set);
             }
             write_colour(file, pixel_samples_scale * pixel_colour);
         }

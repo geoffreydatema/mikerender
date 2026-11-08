@@ -58,6 +58,14 @@ Colour3_8 Colour3_32::to_colour3_8() const {
     return Colour3_8::from_colour3_32(components[0], components[1], components[2]);
 }
 
+Colour3_32 operator+(const Colour3_32& left_operand, const Colour3_32& right_operand) {
+    return Colour3_32(left_operand.r() + right_operand.r(), left_operand.g() + right_operand.g(), left_operand.b() + right_operand.b());
+}
+
 Colour3_32 operator*(float left_operand, const Colour3_32& right_operand) {
     return Colour3_32(left_operand * right_operand.r(), left_operand * right_operand.g(), left_operand * right_operand.b());
+}
+
+Colour3_32 operator*(const Colour3_32& left_operand, float right_operand) {
+    return Colour3_32(left_operand.r() * right_operand, left_operand.g() * right_operand, left_operand.b() * right_operand);
 }

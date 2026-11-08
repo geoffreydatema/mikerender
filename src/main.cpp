@@ -1,17 +1,16 @@
-#include <iostream>
 #include "Camera.h"
+#include "LightSet.h"
 #include "RenderSet.h"
 #include "Mesh.h"
-
-#define WIDTH 256
-#define HEIGHT 256
-#define SAMPLES 10
-#define MAX_DEPTH 50
+#include "PointLight.h"
+#include "NumberUtils.h"
 
 using namespace std;
 
 int main() {
-    Camera camera(WIDTH, HEIGHT, SAMPLES, MAX_DEPTH);
+    Camera camera(Constants::DEFAULT_IMAGE_WIDTH, Constants::DEFAULT_IMAGE_HEIGHT, Constants::DEFAULT_SAMPLES, Constants::DEFAULT_RAY_DEPTH);
+
+    LightSet light_set;
 
     RenderSet render_set;
     
@@ -58,7 +57,9 @@ int main() {
     render_set.add(make_shared<Mesh>(plane_vertices, plane_polygons));
     render_set.add(make_shared<Mesh>(cube_vertices, cube_polygons));
 
-    camera.render(render_set);
+    light_set.add(make_shared<PointLight>(Vector3(1.5, 0, 1.5), 1.0, Colour3_32(1, 1, 1)));
+
+    camera.render(render_set, light_set);
 
     return 0;
 }

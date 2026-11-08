@@ -19,4 +19,6 @@ class Colour3_32 {
         Colour3_8 to_colour3_8() const;
 };
 
+Colour3_32 operator+(const Colour3_32& left_operand, const Colour3_32& right_operand);
 Colour3_32 operator*(float left_operand, const Colour3_32& right_operand);
+Colour3_32 operator*(const Colour3_32& left_operand, float right_operand);

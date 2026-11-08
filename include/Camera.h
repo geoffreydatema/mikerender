@@ -6,6 +6,7 @@
 #include "Ray.h"
 #include "Colour3_32.h"
 #include "RenderSet.h"
+#include "LightSet.h"
 
 using namespace std;
 
@@ -26,11 +27,12 @@ class Camera {
         void initialize();
         Vector3 sample_square() const;
         Ray get_ray(int i, int j) const;
-        Colour3_32 trace_ray(const Ray& ray, int depth, const RenderSet& render_set);
+        Colour3_32 trace_light_ray(const Ray& ray, const LightSet& light_set);
+        Colour3_32 trace_ray(const Ray& ray, int depth, const RenderSet& render_set, const LightSet& light_set);
 
     public:
         Camera(int w, int h, int s, int md);
         void debug();
         void write_colour(ostream& file, const Colour3_32& pixel_colour);
-        void render(const RenderSet& render_set, const string& filename = "renders/render.uaf");
+        void render(const RenderSet& render_set, const LightSet& light_set, const string& filename = "renders/render.uaf");
 };
