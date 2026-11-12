@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <string>
 #include "Vector3.h"
 #include "Ray.h"
 #include "Colour3_32.h"
@@ -23,16 +22,16 @@ class Camera {
         Vector3 first_pixel;
         Vector3 pixel_delta_u;
         Vector3 pixel_delta_v;
-
-        void initialize();
         Vector3 sample_square() const;
-        Ray get_ray(int i, int j) const;
         Colour3_32 trace_light_ray(const Ray& ray, const LightSet& light_set);
-        Colour3_32 trace_ray(const Ray& ray, int depth, const RenderSet& render_set, const LightSet& light_set);
-
+        
     public:
-        Camera(int w, int h, int s, int md);
+        Camera(int width, int height, int s, int md);
         void debug();
-        void write_colour(ostream& file, const Colour3_32& pixel_colour);
-        void render(const RenderSet& render_set, const LightSet& light_set, const string& filename = "renders/render.uaf");
+        int get_image_width() const;
+        int get_image_height() const;
+        int get_samples() const;
+        int get_max_depth() const;
+        double get_pixel_samples_scale() const;
+        Ray get_ray(int i, int j) const;
 };

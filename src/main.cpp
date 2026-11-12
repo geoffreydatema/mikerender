@@ -4,15 +4,15 @@
 #include "Mesh.h"
 #include "PointLight.h"
 #include "NumberUtils.h"
+#include "CPTCore.h"
 
 using namespace std;
 
 int main() {
+    
     Camera camera(Constants::DEFAULT_IMAGE_WIDTH, Constants::DEFAULT_IMAGE_HEIGHT, Constants::DEFAULT_SAMPLES, Constants::DEFAULT_RAY_DEPTH);
-
-    LightSet light_set;
-
     RenderSet render_set;
+    LightSet light_set;
     
     // Plane
     vector<Vector3> plane_vertices = {
@@ -59,7 +59,8 @@ int main() {
 
     light_set.add(make_shared<PointLight>(Vector3(1.5, 0, 1.5), 1.0, Colour3_32(1, 1, 1)));
 
-    camera.render(render_set, light_set);
+    CPTCore cpt_core;
+    cpt_core.render(camera, render_set, light_set);
 
     return 0;
 }
